@@ -8,11 +8,15 @@ import { useState } from 'react';
 
 
 function App() {
-  // Luodaan tilamuuttuja, jossa tallennetaan napautusten määrä.
-  const [clicks, setClicks] = useState(0);
+  // Luodaan tilamuuttuja, johon tallennetaan pelin laskennalliset tiedot.
+  const [stats, setStats] = useState({clicks: 0, balance: 0, increase: 1, itemstobuy: 0});
   const handleClick = () => {
-    // Kasvatetaan napautusten määrää yhdellä.
-    setClicks(clicks + 1);
+    // Tehdään kopio stats-tilamuuttujasta.
+    let newstats = {...stats}
+    // Kasvatetaan napautusten lukumäärää yhdellä.
+    newstats.clicks = newstats.clicks + 1;
+    // Tallennetaan päivitetty stats-muuttuja.
+    setStats(newstats); 
   }
 
   return (
@@ -20,13 +24,13 @@ function App() {
       <div className="root_content">
         <div className="container clicker">
           <Header>lemon clicker</Header>
-          <Balance total={clicks} />
+          <Balance total={stats.clicks} />
           <Lemon onClick={handleClick} />
-          <Booster value="3.2" />
+          <Booster value={stats.increase} />
         </div>
       </div>
-      <Menu items={2} />
-    </div>  
+      <Menu items={stats.itemstobuy} />
+    </div>
   )
 }
 
