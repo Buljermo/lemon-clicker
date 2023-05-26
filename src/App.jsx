@@ -9,8 +9,8 @@ function App() {
   const handleClick = () => {
     // Tehdään kopio stats-tilamuuttujasta.
     let newstats = {...stats}
-    // Kasvataan sitruunoiden määrää kasvatusarvolla.
-    newstats.balance = newstats.balance + newstats.increase;
+    // Kasvatetaan napautusten lukumäärää yhdellä.
+    newstats.clicks = newstats.clicks + 1;
     // Tallennetaan päivitetty stats-muuttuja.
     setStats(newstats); 
   }

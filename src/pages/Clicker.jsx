@@ -7,7 +7,7 @@ function Clicker(props) {
   return (
     <div className="container clicker">
       <Header>lemon clicker</Header>
-      <Balance total={props.stats.balance} />
+      <Balance total={props.stats.clicks} />
       <Lemon onClick={props.handleClick} />
       <Booster value={props.stats.increase} />
     </div>
