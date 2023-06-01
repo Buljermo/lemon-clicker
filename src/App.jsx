@@ -3,6 +3,7 @@ import AppRouter from './components/AppRouter';
 import { useState } from 'react';
 import items from './config/items.js';
 import round from './utils/round';
+import getPurchasableItems from './utils/getPurchasableItems';
 
 
 function App() {
@@ -15,6 +16,8 @@ function App() {
   let newstats = {...stats}
   // Kasvataan sitruunoiden määrää kasvatusarvolla.
   newstats.balance = round(newstats.balance + newstats.increase,1);
+  // Lasketaan ostettavissa olevien tuotteiden lukumäärä.
+  newstats.itemstobuy = countBuyableItems(storeitems,newstats.balance);
   // Tallennetaan päivitetty stats-muuttuja.
   setStats(newstats); 
   }
@@ -46,11 +49,22 @@ function App() {
       // Tallennetaan lasketut koostearvot.
       newstats.increase = increase;
       newstats.upgrades = upgrades;
+      // Lasketaan ostettavissa olevien tuotteiden lukumäärä.
+      newstats.itemstobuy = countBuyableItems(newstoreitems,newstats.balance);
       // Tallennetaan uudet tilamuuttujien arviot.
       setStoreitems(newstoreitems);
       setStats(newstats);
     }
   }
+    // Laskee niiden tuotteiden lukumäärän, joiden ostamiseen on varaa.
+    const countBuyableItems = (items, balance) => {
+      let total = 0;
+      getPurchasableItems(items).forEach(item => {
+        if (item.price <= balance) total++;
+      });
+      return total;
+    }
+  
 
   return (
     <AppRouter stats={stats} 
