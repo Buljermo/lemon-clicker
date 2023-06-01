@@ -8,7 +8,7 @@ import getPurchasableItems from './utils/getPurchasableItems';
 
 function App() {
   // Luodaan tilamuuttuja, johon tallennetaan tuotelista.
-  const [storeitems,setStoreitems] = useState(items);
+  const [storeitems, setStoreitems] = useState(items);
   // Luodaan tilamuuttuja, johon tallennetaan pelin laskennalliset tiedot.
   // Esitellään pelin laskennalliset alkuarvot.
   const initialstats = {
@@ -23,16 +23,16 @@ function App() {
   // Luodaan tilamuuttuja, johon tallennetaan pelin laskennalliset tiedot.
   const [stats, setStats] = useState(initialstats);
   const handleClick = () => {
-  // Tehdään kopio stats-tilamuuttujasta.
-  let newstats = {...stats}
-  // Kasvataan sitruunoiden määrää kasvatusarvolla.
-  newstats.balance = round(newstats.balance + newstats.increase,1);
-  // Lasketaan ostettavissa olevien tuotteiden lukumäärä.
-  newstats.itemstobuy = countBuyableItems(storeitems,newstats.balance);
-  // Kasvatetaan sitruunoiden keräysmäärää.
-  newstats.collected = round(newstats.collected + newstats.increase,1);
-  // Tallennetaan päivitetty stats-muuttuja.
-  setStats(newstats); 
+    // Tehdään kopio stats-tilamuuttujasta.
+    let newstats = { ...stats }
+    // Kasvataan sitruunoiden määrää kasvatusarvolla.
+    newstats.balance = round(newstats.balance + newstats.increase, 1);
+    // Lasketaan ostettavissa olevien tuotteiden lukumäärä.
+    newstats.itemstobuy = countBuyableItems(storeitems, newstats.balance);
+    // Kasvatetaan sitruunoiden keräysmäärää.
+    newstats.collected = round(newstats.collected + newstats.increase, 1);
+    // Tallennetaan päivitetty stats-muuttuja.
+    setStats(newstats);
   }
   const handlePurchase = (id) => {
     // Etsitään tunnistetta vastaavan tuotteen indeksi taulukosta.
@@ -40,50 +40,57 @@ function App() {
     // Varmistetaan, että käyttäjällä on varaa ostaa tuote.
     if (stats.balance >= storeitems[index].price) {
       // Tehdään kopiot tilamuuttujista.
-      let newstoreitems = [...storeitems];
-      let newstats = {...stats};
+      let newstoreitems = JSON.parse(JSON.stringify(storeitems));
+      let newstats = { ...stats };
       // Kasvatetaan tuotteiden määrää yhdellä.
       newstoreitems[index].qty++;
       // Vähännetään varoista tuotteen hinta.
-      newstats.balance = round(newstats.balance - newstoreitems[index].price,1);
+      newstats.balance = round(newstats.balance - newstoreitems[index].price, 1);
       // Lasketaan tuotteen uusi hinta.
       newstoreitems[index].price =
-        Math.floor(newstoreitems[index].baseprice * Math.pow(1.15,newstoreitems[index].qty));
+        Math.floor(newstoreitems[index].baseprice * Math.pow(1.15, newstoreitems[index].qty));
       // Koostemuuttujien esittely.
       let increase = 1;
       let upgrades = 0;
       // Käydään tuotteet yksitellen lävitse.
-      for (let i=0; i<storeitems.length; i++) {
+      for (let i = 0; i < storeitems.length; i++) {
         // Lisätään tuotteiden määrä kokonaismäärään.
         upgrades = upgrades + storeitems[i].qty;
         // Lisätään tuotteen vaikutus kasvatusarvoon.
-        increase = increase + storeitems[i].multiplier*storeitems[i].qty;
+        increase = increase + storeitems[i].multiplier * storeitems[i].qty;
       }
       // Tallennetaan lasketut koostearvot.
       newstats.increase = increase;
       newstats.upgrades = upgrades;
       // Lasketaan ostettavissa olevien tuotteiden lukumäärä.
-      newstats.itemstobuy = countBuyableItems(newstoreitems,newstats.balance);
+      newstats.itemstobuy = countBuyableItems(newstoreitems, newstats.balance);
       // Tallennetaan uudet tilamuuttujien arviot.
       setStoreitems(newstoreitems);
       setStats(newstats);
     }
   }
-    // Laskee niiden tuotteiden lukumäärän, joiden ostamiseen on varaa.
-    const countBuyableItems = (items, balance) => {
-      let total = 0;
-      getPurchasableItems(items).forEach(item => {
-        if (item.price <= balance) total++;
-      });
-      return total;
-    }
-  
+  // Laskee niiden tuotteiden lukumäärän, joiden ostamiseen on varaa.
+  const countBuyableItems = (items, balance) => {
+    let total = 0;
+    getPurchasableItems(items).forEach(item => {
+      if (item.price <= balance) total++;
+    });
+    return total;
+  }
+  const handleReset = () => {
+    // Päivitetään tilamuuttujat alkuarvoihin.
+    setStats(initialstats);
+    setStoreitems(items);
+  }
+
+
 
   return (
-    <AppRouter stats={stats} 
-               storeitems={storeitems} 
-               handleClick={handleClick} 
-               handlePurchase={handlePurchase} />
+    <AppRouter stats={stats}
+      storeitems={storeitems}
+      handleClick={handleClick}
+      handlePurchase={handlePurchase}
+      handleReset={handleReset} />
   )
 }
 
