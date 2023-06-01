@@ -7,9 +7,6 @@ import getPurchasableItems from './utils/getPurchasableItems';
 
 
 function App() {
-  // Luodaan tilamuuttuja, johon tallennetaan tuotelista.
-  const [storeitems, setStoreitems] = useState(items);
-  // Luodaan tilamuuttuja, johon tallennetaan pelin laskennalliset tiedot.
   // Esitellään pelin laskennalliset alkuarvot.
   const initialstats = {
     clicks: 0,
@@ -19,12 +16,26 @@ function App() {
     upgrades: 0,
     collected: 0
   }
-
   // Luodaan tilamuuttuja, johon tallennetaan pelin laskennalliset tiedot.
   const [stats, setStats] = useState(initialstats);
+
+  // Luodaan tilamuuttuja, johon tallennetaan tuotelista.
+  const [storeitems, setStoreitems] = useState(items);
+
+  // Laskee niiden tuotteiden lukumäärän, joiden ostamiseen on varaa.
+  const countBuyableItems = (items, balance) => {
+    let total = 0;
+    getPurchasableItems(items).forEach(item => {
+      if (item.price <= balance) total++;
+    });
+    return total;
+  }
+
   const handleClick = () => {
     // Tehdään kopio stats-tilamuuttujasta.
     let newstats = { ...stats }
+    // Kasvatetaan napautusten lukumäärää yhdellä.
+    newstats.clicks = newstats.clicks + 1;
     // Kasvataan sitruunoiden määrää kasvatusarvolla.
     newstats.balance = round(newstats.balance + newstats.increase, 1);
     // Lasketaan ostettavissa olevien tuotteiden lukumäärä.
@@ -69,14 +80,7 @@ function App() {
       setStats(newstats);
     }
   }
-  // Laskee niiden tuotteiden lukumäärän, joiden ostamiseen on varaa.
-  const countBuyableItems = (items, balance) => {
-    let total = 0;
-    getPurchasableItems(items).forEach(item => {
-      if (item.price <= balance) total++;
-    });
-    return total;
-  }
+
   const handleReset = () => {
     // Päivitetään tilamuuttujat alkuarvoihin.
     setStats(initialstats);
