@@ -3,7 +3,8 @@
 /* -- Värimäärittelyt ------------------------------------------------- */
 
 :root {
-  --primary: #FFB600;
+  --primary: #f20909;
+/*  --primary: #FFB600;*/
   --secondary: #E84855;
   --neutral-lightest: #FFFFFF;
   --neutral-light: #F3F3F3;
